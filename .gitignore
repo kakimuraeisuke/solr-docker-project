@@ -1,4 +1,4 @@
-# Solr Docker Project .gitignore
+# Solr + MySQL + Java + SchemaSpy 統合プロジェクト .gitignore
 
 # Docker関連
 .dockerignore
@@ -9,6 +9,20 @@ solr_data/
 my_custom_core/data/
 my_custom_core/conf/data/
 
+# MySQL関連
+mysql_data/
+mysql/drivers/*.jar
+
+# Java関連
+java-app/target/
+java-app/logs/
+*.class
+*.jar
+
+# SchemaSpy関連
+schemaspy_output/
+schemaspy_local/
+
 # ログファイル
 *.log
 logs/
@@ -16,3 +30,13 @@ logs/
 # OS関連
 .DS_Store
 Thumbs.db
+
+# IDE関連
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 一時ファイル
+*.tmp
+*.temp

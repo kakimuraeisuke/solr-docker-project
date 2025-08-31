@@ -5,6 +5,25 @@
   <field name="_version_" type="long" indexed="true" stored="true"/>
   <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
   
+  <!-- ユーザー関連フィールド -->
+  <field name="type" type="string" indexed="true" stored="true" multiValued="false"/>
+  <field name="username" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="email" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="first_name" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="last_name" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="full_name" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 商品関連フィールド -->
+  <field name="name" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="description" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="price" type="double" indexed="true" stored="true" multiValued="false"/>
+  <field name="category" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="stock_quantity" type="int" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 共通フィールド -->
+  <field name="created_at" type="date" indexed="true" stored="true" multiValued="false"/>
+  <field name="updated_at" type="date" indexed="true" stored="true" multiValued="false"/>
+  
   <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>
   
   <field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
@@ -15,10 +34,22 @@
   
   <copyField source="title" dest="_text_"/>
   <copyField source="content" dest="_text_"/>
+  <copyField source="username" dest="_text_"/>
+  <copyField source="email" dest="_text_"/>
+  <copyField source="first_name" dest="_text_"/>
+  <copyField source="last_name" dest="_text_"/>
+  <copyField source="full_name" dest="_text_"/>
+  <copyField source="name" dest="_text_"/>
+  <copyField source="description" dest="_text_"/>
+  <copyField source="category" dest="_text_"/>
   
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   
   <fieldType name="long" class="solr.LongPointField" docValues="true"/>
+  
+  <fieldType name="int" class="solr.IntPointField" docValues="true"/>
+  
+  <fieldType name="double" class="solr.DoublePointField" docValues="true"/>
   
   <fieldType name="date" class="solr.DatePointField" docValues="true"/>
   
