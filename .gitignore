@@ -1,0 +1,18 @@
+# Solr Docker Project .gitignore
+
+# Docker関連
+.dockerignore
+docker-compose.override.yml
+
+# Solr関連
+solr_data/
+my_custom_core/data/
+my_custom_core/conf/data/
+
+# ログファイル
+*.log
+logs/
+
+# OS関連
+.DS_Store
+Thumbs.db

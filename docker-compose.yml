@@ -1,0 +1,23 @@
+services:
+  solr:
+    image: solr:latest
+    container_name: my-solr
+    ports:
+      - "8983:8983"
+    environment:
+      - SOLR_HEAP=512m
+      - SOLR_OPTS=-Dsolr.lock.type=native
+    volumes:
+      - solr_data:/var/solr/data
+      - ./my_custom_core:/var/solr/data/my_custom_core
+    command: >
+      bash -c "
+        if [ ! -f /var/solr/data/my_custom_core/core.properties ]; then
+          solr-precreate my_custom_core /var/solr/data/my_custom_core/conf --user-managed;
+        fi &&
+        solr-foreground
+      "
+    restart: unless-stopped
+
+volumes:
+  solr_data:
