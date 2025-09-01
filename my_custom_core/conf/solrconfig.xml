@@ -43,13 +43,18 @@
   
   <requestHandler name="/update" class="solr.UpdateRequestHandler"/>
   
-  <requestHandler name="/update/csv" class="solr.CSVRequestHandler" startup="lazy"/>
+  <requestHandler name="/update/csv" class="solr.CSVRequestHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="encoding">UTF-8</str>
+    </lst>
+  </requestHandler>
   <requestHandler name="/update/json" class="solr.JsonUpdateRequestHandler" startup="lazy"/>
   <requestHandler name="/update/extract" startup="lazy" class="solr.extraction.ExtractingRequestHandler">
     <lst name="defaults">
       <str name="lowernames">true</str>
       <str name="uprefix">ignored_</str>
       <str name="captureAttr">true</str>
+      <str name="encoding">UTF-8</str>
     </lst>
   </requestHandler>
   

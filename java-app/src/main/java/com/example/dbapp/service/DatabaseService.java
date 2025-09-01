@@ -35,7 +35,16 @@ public class DatabaseService {
                 config.getProperty("mysql.username"),
                 config.getProperty("mysql.password")
             );
-            logger.info("MySQLデータベースに接続しました");
+            
+            // 文字エンコーディング設定（権限が必要な設定は除外）
+            connection.setAutoCommit(true);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("SET NAMES utf8mb4");
+                stmt.execute("SET CHARACTER SET utf8mb4");
+                stmt.execute("SET character_set_connection=utf8mb4");
+            }
+            
+            logger.info("MySQLデータベースに接続しました（UTF-8対応）");
         } catch (ClassNotFoundException e) {
             throw new SQLException("MySQLドライバーが見つかりません", e);
         }

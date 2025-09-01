@@ -1,65 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema name="my_custom_core" version="1.6">
+  <!-- ドキュメントの一意性を保証するフィールド -->
   <uniqueKey>id</uniqueKey>
   
+  <!-- Solr内部管理用フィールド（バージョン管理） -->
   <field name="_version_" type="long" indexed="true" stored="true"/>
+  
+  <!-- プライマリキー：各ドキュメントの一意識別子 -->
   <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
   
+  <!-- ======================================== -->
   <!-- ユーザー関連フィールド -->
+  <!-- ======================================== -->
+  
+  <!-- ドキュメントタイプ：ユーザー、商品、注文などを識別 -->
   <field name="type" type="string" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- ユーザー名：ログインIDとして使用、検索対象 -->
   <field name="username" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- メールアドレス：ユーザー識別、検索対象 -->
   <field name="email" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 名：ユーザーの名前（検索・表示用） -->
   <field name="first_name" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 姓：ユーザーの名字（検索・表示用） -->
   <field name="last_name" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- フルネーム：名と姓を結合した検索用フィールド -->
   <field name="full_name" type="text_general" indexed="true" stored="true" multiValued="false"/>
   
+  <!-- ======================================== -->
   <!-- 商品関連フィールド -->
-  <field name="name" type="text_general" indexed="true" stored="true" multiValued="false"/>
-  <field name="description" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <!-- ======================================== -->
+  
+  <!-- 商品名：商品のタイトル、検索の主要対象 -->
+  <field name="name" type="text_ja" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 商品説明：詳細な商品情報、全文検索対象 -->
+  <field name="description" type="text_ja" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 価格：数値検索・範囲検索・ソート用 -->
   <field name="price" type="double" indexed="true" stored="true" multiValued="false"/>
-  <field name="category" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- カテゴリ：商品分類、ファセット検索・絞り込み用 -->
+  <field name="category" type="text_ja" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 在庫数：在庫状況の確認、数値検索用 -->
   <field name="stock_quantity" type="int" indexed="true" stored="true" multiValued="false"/>
   
+  <!-- ======================================== -->
   <!-- 共通フィールド -->
+  <!-- ======================================== -->
+  
+  <!-- 作成日時：ドキュメント作成日、日付範囲検索・ソート用 -->
   <field name="created_at" type="date" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- 更新日時：最終更新日、日付範囲検索・ソート用 -->
   <field name="updated_at" type="date" indexed="true" stored="true" multiValued="false"/>
   
+  <!-- ======================================== -->
+  <!-- 検索統合フィールド -->
+  <!-- ======================================== -->
+  
+  <!-- 統合検索用フィールド：複数フィールドの内容をコピーして一括検索可能 -->
+  <!-- stored="false"：検索用なので元の値は保存しない（メモリ節約） -->
   <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>
   
+  <!-- 汎用テキストフィールド：追加のテキスト情報用 -->
   <field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  
+  <!-- タイトル：汎用タイトルフィールド -->
   <field name="title" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  
+  <!-- コンテンツ：汎用コンテンツフィールド -->
   <field name="content" type="text_general" indexed="true" stored="true" multiValued="false"/>
   
+  <!-- タイムスタンプ：現在時刻をデフォルト値とする日時フィールド -->
   <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
   
+  <!-- ======================================== -->
+  <!-- copyField設定：検索統合のためのフィールドコピー -->
+  <!-- ======================================== -->
+  
+  <!-- タイトル系フィールドを統合検索用にコピー -->
   <copyField source="title" dest="_text_"/>
   <copyField source="content" dest="_text_"/>
+  
+  <!-- ユーザー関連フィールドを統合検索用にコピー -->
   <copyField source="username" dest="_text_"/>
   <copyField source="email" dest="_text_"/>
   <copyField source="first_name" dest="_text_"/>
   <copyField source="last_name" dest="_text_"/>
   <copyField source="full_name" dest="_text_"/>
+  
+  <!-- 商品関連フィールドを統合検索用にコピー -->
   <copyField source="name" dest="_text_"/>
   <copyField source="description" dest="_text_"/>
   <copyField source="category" dest="_text_"/>
   
+  <!-- ======================================== -->
+  <!-- フィールドタイプ定義 -->
+  <!-- ======================================== -->
+  
+  <!-- 文字列型：完全一致検索、ソート、ファセット用 -->
+  <!-- sortMissingLast="true"：ソート時に欠損値を最後に配置 -->
+  <!-- docValues="true"：ソート・ファセット用の値保存（メモリ効率化） -->
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   
+  <!-- 長整数型：大きな数値、ID、バージョン番号用 -->
   <fieldType name="long" class="solr.LongPointField" docValues="true"/>
   
+  <!-- 整数型：在庫数、数量、順序番号用 -->
   <fieldType name="int" class="solr.IntPointField" docValues="true"/>
   
+  <!-- 倍精度浮動小数点型：価格、評価、比率用 -->
   <fieldType name="double" class="solr.DoublePointField" docValues="true"/>
   
+  <!-- 日付型：作成日時、更新日時、期限用 -->
   <fieldType name="date" class="solr.DatePointField" docValues="true"/>
   
+  <!-- 全文検索用テキスト型：商品名、説明、ユーザー名等の検索用 -->
+  <!-- positionIncrementGap="100"：マルチバリューフィールド間の位置間隔 -->
   <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+    <!-- インデックス作成時のテキスト解析 -->
     <analyzer type="index">
+      <!-- 標準トークナイザー：単語境界でテキストを分割 -->
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <!-- 小文字化フィルター：大文字小文字を区別しない検索を実現 -->
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <!-- クエリ実行時のテキスト解析（インデックス作成時と同じ処理） -->
+    <analyzer type="query">
       <tokenizer class="solr.StandardTokenizerFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
+  </fieldType>
+  
+  <!-- 日本語対応テキスト型：日本語テキストの適切な処理 -->
+  <fieldType name="text_ja" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <!-- 日本語対応トークナイザー -->
+      <tokenizer class="solr.JapaneseTokenizerFactory"/>
+      <!-- 日本語基本形フィルター -->
+      <filter class="solr.JapaneseBaseFormFilterFactory"/>
+      <!-- 日本語読みフィルター -->
+      <filter class="solr.JapaneseReadingFormFilterFactory"/>
+      <!-- 小文字化フィルター -->
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
     <analyzer type="query">
-      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <tokenizer class="solr.JapaneseTokenizerFactory"/>
+      <filter class="solr.JapaneseBaseFormFilterFactory"/>
+      <filter class="solr.JapaneseReadingFormFilterFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
   </fieldType>

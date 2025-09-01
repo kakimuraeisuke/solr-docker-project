@@ -1,6 +1,17 @@
 -- サンプルデータの挿入
 USE sampledb;
 
+-- セッションの文字エンコーディング設定
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET character_set_connection=utf8mb4;
+SET character_set_database=utf8mb4;
+SET character_set_results=utf8mb4;
+SET character_set_server=utf8mb4;
+SET collation_connection=utf8mb4_unicode_ci;
+SET collation_database=utf8mb4_unicode_ci;
+SET collation_server=utf8mb4_unicode_ci;
+
 -- ユーザーデータの挿入
 INSERT INTO users (username, email, first_name, last_name) VALUES
 ('john_doe', 'john.doe@example.com', 'John', 'Doe'),
